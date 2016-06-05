@@ -6,6 +6,7 @@ import lib.RoundAbout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -32,12 +33,17 @@ public class RMIClient {
         RMIClient client = new RMIClient();
         List<RoundAbout> roundAboutList = client.connectServer(simsize, Arrays.stream(args).mapToInt(Integer::parseInt).toArray());
 
-//        Accumulate results from all servers
-        RoundAbout roundAbout = accumulateResults(roundAboutList);
         int numberOfServers = roundAboutList.size();
 
+        if (numberOfServers > 0) {
+//        Accumulate results from all servers
+            RoundAbout roundAbout = accumulateResults(roundAboutList);
+
 //        Print accumulated results
-        printResults(simsize, roundAbout, numberOfServers);
+            printResults(simsize, roundAbout, numberOfServers);
+        } else {
+            System.out.println("No servers available!");
+        }
     }
 
     private List<RoundAbout> connectServer(int simsize, int [] ports){
@@ -61,7 +67,10 @@ public class RMIClient {
         });
 
 //        Add all results to list
-        roundAboutList.addAll(threadList.parallelStream().map(ClientThread::getRoundAbout).collect(Collectors.toList()));
+        roundAboutList.addAll(threadList.parallelStream().
+                map(ClientThread::getRoundAbout).
+                filter(Objects::nonNull).
+                collect(Collectors.toList()));
 
         return roundAboutList;
     }

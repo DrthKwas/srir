@@ -41,7 +41,8 @@ public class ClientThread extends Thread {
             LOGGER.info("On port: " + port + " number of cars arrived (S)= " + roundAbout.arrival_cnt[2]);
             LOGGER.info("On port: " + port + " number of cars arrived (E)= " + roundAbout.arrival_cnt[3]);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage() + "to port: " + port, e);
+            LOGGER.log(Level.SEVERE, e.getMessage() + "to port: " + port);
+            roundAbout = null;
         }
     }
 }

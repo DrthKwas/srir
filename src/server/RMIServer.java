@@ -6,6 +6,7 @@ import lib.RoundAbout;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,10 @@ public class RMIServer extends UnicastRemoteObject implements RMI {
                     Registry reg = LocateRegistry.createRegistry(Integer.parseInt(port));
                     reg.rebind("server", new RMIServer());
                     LOGGER.info("Server started on port: " + port);
+            }catch (ExportException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
+            }catch (IllegalArgumentException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage());
             }catch (Exception e){
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
